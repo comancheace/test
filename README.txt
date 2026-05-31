@@ -46,3 +46,20 @@ NOTES
 -----
 MediaPipe code uses @mediapipe/tasks-vision from jsDelivr CDN.
 WebRTC adds webcam tracks with RTCPeerConnection.addTrack and displays remote tracks in ontrack.
+
+
+BACKGROUND MP3 MUSIC
+--------------------
+This version includes a placeholder:
+
+public/assets/music.mp3.placeholder.txt
+
+Replace it with your real file named exactly:
+
+public/assets/music.mp3
+
+The music starts after the user clicks "Open Portal" because browsers block autoplay audio before user interaction.
+
+Volume:
+- Normal portal: 0.35
+- MAGIC TOUCH: 0.62
