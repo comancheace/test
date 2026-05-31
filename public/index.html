@@ -100,6 +100,8 @@ let lastTouchSound = 0;
 let particles = [];
 let magicPulse = 0;
 let audioCtx = null;
+let bgMusic = null;
+let musicEnabled = false;
 
 function resize(){
   canvas.width = innerWidth;
@@ -134,12 +136,35 @@ async function initMediaPipe(){
   debugEl.textContent = "Hands: MediaPipe ready";
 }
 
+function setupBackgroundMusic(){
+  if(bgMusic) return;
+
+  bgMusic = new Audio("assets/music.mp3");
+  bgMusic.loop = true;
+  bgMusic.volume = 0.35;
+  bgMusic.preload = "auto";
+
+  bgMusic.play()
+    .then(()=>{
+      musicEnabled = true;
+      debugEl.textContent += " | Music: on";
+    })
+    .catch(err=>{
+      musicEnabled = false;
+      console.warn("Background music could not start. Add public/assets/music.mp3 and press Open Portal after user interaction.", err);
+      debugEl.textContent += " | Music: missing/off";
+    });
+}
+
 async function startPortal(){
   room = roomInput.value.trim() || "portal-room";
   overlay.style.display = "none";
   status("Requesting webcam...");
 
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  // Browser audio autoplay is allowed here because the user clicked "Open Portal".
+  setupBackgroundMusic();
 
   localStream = await navigator.mediaDevices.getUserMedia({
     video: {
@@ -330,6 +355,10 @@ function updateMagicTouch(){
   // Remote hand expires after 700 ms.
   if(remoteHand && now - remoteHand.t > 700) remoteHand = null;
 
+  if(bgMusic && musicEnabled){
+    bgMusic.volume = magicTouch ? 0.62 : 0.35;
+  }
+
   if(localHand && remoteHand){
     const a = screenPos(localHand);
     const b = screenPos(remoteHand);
@@ -343,6 +372,10 @@ function updateMagicTouch(){
         lastTouchSound = now;
       }
     }
+  }
+
+  if(bgMusic && musicEnabled){
+    bgMusic.volume = magicTouch ? 0.62 : 0.35;
   }
 }
 
