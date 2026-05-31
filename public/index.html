@@ -61,7 +61,19 @@ async function startPortal(){
   };
 }
 async function createPeer(){
-  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:openrelay.metered.ca:80'}]});
+  pc=new RTCPeerConnection({iceServers:[
+  {urls:'stun:openrelay.metered.ca:80'},
+  {
+    urls:'turn:openrelay.metered.ca:80',
+    username:'openrelayproject',
+    credential:'openrelayproject'
+  },
+  {
+    urls:'turn:openrelay.metered.ca:443',
+    username:'openrelayproject',
+    credential:'openrelayproject'
+  }
+]});
   localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
   pc.ontrack=e=>{remoteVideo.srcObject=e.streams[0];status('Portal open: receiving remote webcam.');magicPulse=1;playBell();};
   pc.onicecandidate=e=>{if(e.candidate&&ws&&ws.readyState===1)ws.send(JSON.stringify({type:'candidate',candidate:e.candidate}))};
