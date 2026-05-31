@@ -1,15 +1,16 @@
-Magic WebRTC Portal - Remote Webcam Only
+WebRTC + MediaPipe Hands Magic Portal
 
-This is a true WebRTC version, not JPEG snapshots.
+WHAT IT DOES
+------------
+- True WebRTC remote webcam.
+- Local webcam hidden.
+- MediaPipe Hand Landmarker tracks your index fingertip.
+- Hand coordinates are sent by WebSocket.
+- If local and remote fingertips overlap, MAGIC TOUCH triggers:
+  purple glow, particle burst, energy beam, magic sound.
 
-Features:
-- You only see the other user's webcam.
-- Your local webcam is hidden but sent to the other user.
-- WebRTC video/audio streaming.
-- WebSocket signaling server.
-- Blue/magenta magic portal canvas effects.
-
-How to run:
+RUN LOCALLY
+-----------
 1. Install Node.js.
 2. Open terminal in this folder.
 3. Run:
@@ -18,11 +19,30 @@ How to run:
 4. Open:
    http://localhost:3000
 
-For internet use:
-- Deploy to an HTTPS server.
-- Both users open the same URL and enter the same room name.
-- Some networks need a TURN server; this uses only public STUN by default.
+TEST WITH TWO DEVICES ON SAME NETWORK
+-------------------------------------
+Computer running Node:
+http://localhost:3000
 
-Note:
-This is HTML5/WebRTC because browsers support WebRTC natively.
-Doing real WebRTC directly inside Cinder++ requires external native libraries and is much more complex.
+Other computer / phone:
+http://YOUR_PC_IP:3000
+
+INTERNET DEPLOYMENT
+-------------------
+Needs:
+- Node.js hosting
+- HTTPS
+- WebSocket support
+
+For difficult networks, TURN server may be required.
+This demo includes public OpenRelay TURN settings for testing.
+
+MOBILE
+------
+MediaPipe Hands works on modern Android Chrome and iPhone Safari/Chrome.
+Camera permissions must be allowed.
+
+NOTES
+-----
+MediaPipe code uses @mediapipe/tasks-vision from jsDelivr CDN.
+WebRTC adds webcam tracks with RTCPeerConnection.addTrack and displays remote tracks in ontrack.
